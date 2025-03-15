@@ -1,14 +1,12 @@
 from abc import ABC, abstractmethod
 from typing import Sequence
 
-from pydantic import BaseModel
-
 from wrench.models import Group
 
 
 class BaseGrouper(ABC):
     @abstractmethod
-    def group_items(self, items: Sequence[BaseModel]) -> list[Group]:
+    def group_items(self, items: Sequence[dict]) -> list[Group]:
         """
         Groups the given list of items into a list of Group objects.
 

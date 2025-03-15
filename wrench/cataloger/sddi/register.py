@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from ckanapi import RemoteCKAN
 
 from wrench.cataloger.base import BaseCataloger
@@ -40,7 +42,7 @@ class SDDICataloger(BaseCataloger):
         self.ckan_server = RemoteCKAN(address=self.endpoint, apikey=self.api_key)
         self.owner_org = owner_org
 
-    def register(self, service: CommonMetadata, groups: list[CommonMetadata]):
+    def register(self, service: CommonMetadata, groups: Sequence[CommonMetadata]):
         online_service = self._create_online_service(service)
         device_groups = self._create_device_groups(groups)
 
@@ -113,7 +115,7 @@ class SDDICataloger(BaseCataloger):
         )
 
     def _create_device_groups(
-        self, metadata: list[CommonMetadata]
+        self, metadata: Sequence[CommonMetadata]
     ) -> list[DeviceGroup]:
         DOMAIN_GROUPS = [
             "administration",

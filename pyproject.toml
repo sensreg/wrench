@@ -72,6 +72,7 @@ ignore = [
     "D101",  # missing docstring in public class
     "D104",  # missing docstring in public package
     "D102",  # missing docstring in public method
+    "D107",  # Missing docstring in __init__ method
     "E501",  # line too long,
 ]
 

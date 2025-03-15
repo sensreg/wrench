@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 from typing import Protocol, Sequence, Union
 
-from pydantic import BaseModel
 from sentence_transformers import SentenceTransformer
 
 from wrench.grouper.teleclass.core.models import Document
@@ -63,37 +62,36 @@ class JSONDocumentLoader:
 
 class ModelDocumentLoader:
     """
-    A class to load and process documents that are instances of Pydantic BaseModel.
+    A class to load and process documents that are instances of dict.
 
     Attributes:
-        documents (list[BaseModel]): A list of Pydantic BaseModel instances.
+        documents (Sequence[dict]): A list of dict representing items instances.
 
     Methods:
-        __init__(documents: list[BaseModel]):
-            Initializes the ModelDocumentLoader with a list of BaseModel instances.
+        __init__(documents: Sequence[dict]):
+            Initializes the ModelDocumentLoader with a list of dict instances.
 
         load(encoder: SentenceTransformer) -> list[DocumentMeta]:
             Loads the documents, encodes their content using the provided encoder,
             and returns a list of DocumentMeta instances.
     """
 
-    def __init__(self, documents: Sequence[BaseModel]):
+    def __init__(self, documents: Sequence[dict]):
         """
         Initialize the DocumentLoader with a list of documents.
 
         Args:
-            documents (list[BaseModel]): A list of BaseModel instances.
+            documents (Sequence[dict]): A list of dicts.
 
         Raises:
             TypeError: If documents is not a list or if any element
-                       in documents is not an instance of BaseModel.
+                       in documents is not an instance of dict.
         """
         if not isinstance(documents, list) or not all(
-            isinstance(doc, BaseModel) for doc in documents
+            isinstance(doc, dict) for doc in documents
         ):
-            doc = documents[0]
             raise TypeError(
-                f"documents must be a list of BaseModel instances, got list of {type(doc)}"
+                f"documents must be a list of dict instances, got list of {type(documents)}"
             )
         self.documents = documents
 
@@ -101,8 +99,8 @@ class ModelDocumentLoader:
         return [
             Document(
                 id=str(id),
-                content=doc.model_dump_json(),
-                embeddings=encoder.encode(doc.model_dump_json(), convert_to_numpy=True),
+                content=json.dumps(doc),
+                embeddings=encoder.encode(json.dumps(doc), convert_to_numpy=True),
             )
             for id, doc in enumerate(self.documents)
         ]

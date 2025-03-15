@@ -54,6 +54,7 @@ class SensorThingsHarvester(BaseHarvester):
 
         return [self.translator.translate(thing) for thing in things]
 
-    def return_items(self) -> list[Thing]:
+    def return_items(self) -> list[dict]:
         """Returns things."""
-        return self.things
+        things_dict = [thing.model_dump() for thing in self.things]
+        return things_dict

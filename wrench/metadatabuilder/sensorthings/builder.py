@@ -1,6 +1,7 @@
 from datetime import datetime, timezone
 from functools import reduce
 from operator import __or__
+from typing import Sequence
 
 from wrench.harvester.sensorthings.models import Thing
 from wrench.metadatabuilder.base import BaseMetadataBuilder
@@ -43,7 +44,7 @@ class SensorThingsMetadataBuilder(BaseMetadataBuilder):
         self.service_spatial_calculator = PolygonalExtentCalculator()
         self.group_spatial_calculator = GeometryCollector()
 
-    def build_service_metadata(self, things: list[Thing]) -> CommonMetadata:
+    def build_service_metadata(self, things_dict: Sequence[dict]) -> CommonMetadata:
         """
         Retrieves metadata for the SensorThings data.
 
@@ -56,6 +57,8 @@ class SensorThingsMetadataBuilder(BaseMetadataBuilder):
                             identifier, description, spatial extent, temporal extent,
                             source type, and last updated time.
         """
+        things = [Thing.model_validate(thing) for thing in things_dict]
+
         geographic_extent = self.service_spatial_calculator.calculate_extent(things)
         timeframe = self._calculate_timeframe(things)
 

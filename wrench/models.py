@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Protocol, TypeVar, runtime_checkable
+from typing import Any, Protocol, TypeVar, runtime_checkable
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -10,14 +10,14 @@ T = TypeVar("T")
 # define a protocol for location
 @runtime_checkable
 class Location(Protocol):
-    def get_coordinates(self):
+    def get_coordinates(self) -> list[tuple[float, float]]:
         """
         Returns the coordinates as a tuple of two float values.
 
         Returns:
             tuple: A tuple containing two float values representing the coordinates.
         """
-        tuple[float, float]
+        pass
 
 
 class TimeFrame(BaseModel):
@@ -25,15 +25,21 @@ class TimeFrame(BaseModel):
     latest_time: datetime
 
 
-class Item(BaseModel):
+class Device(BaseModel):
     """
-    Item model representing an entity with an ID.
+    Device model representing an entity with an ID.
 
     Attributes:
         id (str): The unique identifier for the item.
     """
 
     id: str
+    name: str
+    description: str
+    location: Location
+    sensor_name: str
+
+    properties: dict[str, Any]
 
     model_config = ConfigDict(arbitrary_types_allowed=True)
 

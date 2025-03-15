@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+from typing import Sequence
 
 from wrench.log import logger
 from wrench.models import CommonMetadata
@@ -19,5 +20,5 @@ class BaseCataloger(ABC):
         self.logger = logger.getChild(self.__class__.__name__)
 
     @abstractmethod
-    def register(self, service: CommonMetadata, groups: list[CommonMetadata]):
+    def register(self, service: CommonMetadata, groups: Sequence[CommonMetadata]):
         pass

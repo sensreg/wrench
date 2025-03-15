@@ -86,15 +86,13 @@ class TELEClassGrouper(BaseGrouper):
 
         self.logger = logger.getChild(self.__class__.__name__)
 
-    def _load_items(
-        self, source: Union[str, Path, Sequence[BaseModel]]
-    ) -> list[Document]:
+    def _load_items(self, source: Union[str, Path, Sequence[dict]]) -> list[Document]:
         """Loads and processes documents from various input sources.
 
         Args:
             source: Input source for documents. Can be:
                 - str or Path: Path to a JSON file containing documents
-                - list[BaseModel]: List of pydantic model instances representing documents
+                - Sequence[dict]: List of dict instances representing documents
 
         Returns:
             list[DocumentMeta]: List of processed documents with embeddings.
@@ -276,7 +274,7 @@ class TELEClassGrouper(BaseGrouper):
 
         return self.classifier_manager.predict(text)
 
-    def group_items(self, items: Sequence[BaseModel]) -> list[Group]:
+    def group_items(self, items: Sequence[dict]) -> list[Group]:
         """
         Groups a collection of documents into predefined categories.
 
